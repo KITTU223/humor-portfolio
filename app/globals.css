@@ -1,26 +1,148 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-paper: #f5f1e8;
+  --color-paper-deep: #ebe5d6;
+  --color-ink: #171717;
+  --color-muted: #5a554b;
+  --color-night: #111111;
+  --color-lime: #d9ff43;
+  --color-blue: #4355f5;
+  --color-signal: #ff6438;
+
+  --font-display: var(--font-anton), "Impact", sans-serif;
+  --font-sans: var(--font-grotesk), system-ui, sans-serif;
+  --font-serif: var(--font-instrument), Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --text-mega: clamp(3.4rem, 13.5vw, 13rem);
+  --text-mega--line-height: 0.86;
+  --text-huge: clamp(3rem, 10vw, 9.5rem);
+  --text-huge--line-height: 0.88;
+  --text-big: clamp(2.2rem, 5.5vw, 5rem);
+  --text-big--line-height: 0.92;
+
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Konami code: "Developer mode: unnecessarily dramatic." */
+html[data-mode="dramatic"] {
+  --color-lime: #ff6438;
+  --color-signal: #d9ff43;
+  --color-blue: #ff2e88;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html[data-mode="dramatic"] [data-boast] {
+  font-size: 0;
+}
+
+html[data-mode="dramatic"] [data-boast]::after {
+  content: attr(data-boast);
+  font-size: 0.75rem;
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  html[data-intro="running"] {
+    overflow: hidden;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-paper);
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--color-lime);
+    color: var(--color-ink);
+  }
+
+  /* Triple-tap targets: stop iOS treating two quick taps as double-tap-to-zoom. */
+  [data-egg-trigger] {
+    touch-action: manipulation;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-blue);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-[1600px] px-4 sm:px-8 lg:px-12;
+  }
+
+  /* Small mono commentary: the site's inner monologue. */
+  .annot {
+    @apply font-mono text-[0.7rem] tracking-wide uppercase sm:text-xs;
+  }
+
+  .punchline {
+    @apply font-serif text-xl italic leading-snug sm:text-2xl;
+  }
+
+  .tape {
+    @apply inline-block -rotate-2 bg-lime px-2 py-1 font-mono text-xs uppercase text-ink shadow-[2px_2px_0_var(--color-ink)];
+  }
+
+  .btn {
+    @apply relative inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-ink px-6 font-mono text-sm font-bold tracking-wide uppercase transition-[background-color,color,transform] duration-300;
+  }
+
+  .btn-primary {
+    @apply bg-ink text-paper hover:bg-blue;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-ink hover:bg-ink hover:text-paper;
+  }
+
+  .tag {
+    @apply rounded-full border border-current px-3 py-1 font-mono text-[0.68rem] uppercase;
+  }
+
+  /* Heading lines that slide up from behind a mask. Only the bottom edge clips,
+     so descenders, italics and rotated words aren't cut off. */
+  .line {
+    display: block;
+    clip-path: inset(-0.6em -0.4em -0.2em -0.4em);
+  }
+
+  .line > span {
+    display: block;
+  }
+}
+
+/* Reveal targets start hidden only when JS can reveal them, and never for reduced motion.
+   lib/reveals.ts adds data-revealed when an element's animation starts. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal="fade"]:not([data-revealed]),
+  html.js [data-reveal="joke"]:not([data-revealed]) {
+    opacity: 0;
+  }
+
+  html.js [data-reveal="mask"]:not([data-revealed]) {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  html.js [data-reveal="lines"]:not([data-revealed]) .line > span {
+    transform: translateY(125%);
+  }
 }

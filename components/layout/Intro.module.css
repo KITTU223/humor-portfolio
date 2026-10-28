@@ -1,0 +1,59 @@
+.intro {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+}
+
+:global(html[data-intro="running"]) .intro {
+  display: block;
+}
+
+.top,
+.bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
+  background: var(--color-paper);
+}
+
+.top {
+  top: 0;
+}
+
+.bottom {
+  bottom: 0;
+  border-top: 1px solid rgb(23 23 23 / 0.08);
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding-block: 4rem;
+}
+
+.skip {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1.5px solid var(--color-ink);
+  border-radius: 999px;
+  background: var(--color-paper);
+  transition: background-color 0.2s;
+}
+
+.skip:hover {
+  background: var(--color-lime);
+}
+
+@media (max-height: 560px) {
+  .content {
+    padding-block: 1.5rem;
+  }
+}

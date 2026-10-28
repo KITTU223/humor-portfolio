@@ -1,0 +1,122 @@
+.wordmark {
+  position: relative;
+  padding-bottom: 4.5rem;
+}
+
+.letters {
+  display: flex;
+  align-items: flex-end;
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 16vw, 15rem);
+  line-height: 0.8;
+  text-transform: uppercase;
+  color: var(--color-paper);
+  /* Cheap comic-print offset. */
+  text-shadow: 0.035em 0.035em 0 var(--color-signal);
+}
+
+.letter {
+  display: inline-block;
+  transition:
+    transform 0.4s var(--ease-spring),
+    color 0.2s;
+}
+
+.letter:hover {
+  transform: translateY(-0.12em) rotate(-4deg);
+  color: var(--color-lime);
+}
+
+/* The H has given up. It tips over around its bottom-right corner, onto the "floor". */
+.fallen {
+  display: inline-block;
+  transform-origin: 100% 100%;
+  rotate: 90deg;
+  translate: 0 -0.02em;
+  color: var(--color-paper);
+  transition: transform 0.7s var(--ease-spring);
+}
+
+/* Hovering cancels the fall (rotate + transform compose), so it stands back up, then flops again. */
+.fallen:hover {
+  transform: rotate(-90deg);
+  transition-duration: 0.45s;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .fallen {
+      animation: topple linear both;
+      animation-timeline: view();
+      /* Finishes once the wordmark is fully on screen; the page bottom may never reach "cover". */
+      animation-range: entry 10% entry 100%;
+    }
+  }
+}
+
+@keyframes topple {
+  0%,
+  35% {
+    rotate: 0deg;
+  }
+  55% {
+    rotate: 8deg;
+  }
+  62% {
+    rotate: -3deg;
+  }
+  100% {
+    rotate: 90deg;
+  }
+}
+
+.tm {
+  align-self: flex-start;
+  margin-left: 0.45em;
+  font-size: 0.3em;
+  color: var(--color-lime);
+  text-shadow: none;
+}
+
+.tape {
+  position: absolute;
+  bottom: 0.75rem;
+  left: clamp(9rem, 48%, 40rem);
+  rotate: 3deg;
+  max-width: 16rem;
+  line-height: 1.4;
+}
+
+.footnote {
+  position: absolute;
+  right: 0;
+  top: 0;
+  max-width: 11rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: rgb(245 241 232 / 0.6);
+  rotate: 4deg;
+}
+
+@media (max-width: 767px) {
+  .wordmark {
+    padding-bottom: 0;
+  }
+
+  .tape,
+  .footnote {
+    position: static;
+  }
+
+  .tape {
+    margin-top: 1.5rem;
+  }
+
+  .footnote {
+    margin-top: 1rem;
+    max-width: none;
+    rotate: none;
+  }
+}

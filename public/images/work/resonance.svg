@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 280" fill="none">
+  <title>Resonance: an expanding audio waveform</title>
+  <g stroke="#D8E4DC" stroke-width="1" opacity=".08">
+    <circle cx="240" cy="140" r="116"/><circle cx="240" cy="140" r="88"/>
+    <path d="M40 140h400M240 12v256"/>
+  </g>
+  <g stroke="#A9D4BE" stroke-linecap="round">
+    <path d="M94 130v20m16-37v54m16-73v92m16-61v30" stroke-width="5" opacity=".4"/>
+    <path d="M158 107v66m16-87v108m16-119v130m16-97v64m16-126v188" stroke-width="6"/>
+    <path d="M240 34v212" stroke="#F2F5EB" stroke-width="7"/>
+    <path d="M258 59v162m16-126v90m16-115v140m16-119v98m16-78v58" stroke-width="6"/>
+    <path d="M338 125v30m16-61v92m16-73v54m16-37v20" stroke-width="5" opacity=".4"/>
+  </g>
+  <circle cx="240" cy="140" r="7" fill="#FF5D48"/>
+</svg>

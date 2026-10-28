@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 280" fill="none">
+  <title>Image Humanizer: digital pixels becoming an organic portrait</title>
+  <g stroke="#242725" stroke-width="1">
+    <path d="M80 40H400M80 240H400M140 20V260M340 20V260" opacity=".1"/>
+    <circle cx="240" cy="140" r="104" opacity=".14"/>
+  </g>
+  <g fill="#202522">
+    <path d="M232 54h-40v20h-20v20h-20v40h20v20h20v40h-20v30h60V54Z"/>
+    <rect x="144" y="66" width="14" height="14"/>
+    <rect x="120" y="104" width="18" height="18"/>
+    <rect x="144" y="158" width="14" height="14"/>
+    <rect x="126" y="194" width="9" height="9"/>
+    <path d="M248 54c40 0 67 26 67 58 0 11 5 20 16 34 4 5 1 11-5 11h-11v19c0 14-10 23-25 23h-9v25h-33V54Z"/>
+  </g>
+  <path d="M240 34v212" stroke="#FF3B30" stroke-width="2"/>
+  <circle cx="240" cy="34" r="4" fill="#FF3B30"/>
+  <circle cx="240" cy="246" r="4" fill="#FF3B30"/>
+  <path d="M352 82v24m-12-12h24" stroke="#FF3B30" stroke-width="2"/>
+  <g fill="#F0F1EC"><rect x="192" y="94" width="12" height="12"/><rect x="212" y="114" width="12" height="12"/><rect x="192" y="154" width="12" height="12"/></g>
+</svg>

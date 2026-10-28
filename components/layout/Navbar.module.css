@@ -1,0 +1,207 @@
+.progress {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--color-blue);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+@supports (animation-timeline: scroll()) {
+  .progress {
+    animation: grow linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+@keyframes grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Tagline swaps when the logo character waves. */
+.tagline {
+  display: grid;
+  color: var(--color-muted);
+}
+
+.tagline > span {
+  grid-area: 1 / 1;
+  transition:
+    opacity 0.2s,
+    translate 0.35s var(--ease-spring);
+}
+
+.tagline > span:last-child {
+  opacity: 0;
+  translate: 0 0.4em;
+  white-space: nowrap;
+}
+
+.brand:hover .tagline > span:first-child,
+.brand:focus-visible .tagline > span:first-child {
+  opacity: 0;
+  translate: 0 -0.4em;
+}
+
+.brand:hover .tagline > span:last-child,
+.brand:focus-visible .tagline > span:last-child {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.tm {
+  display: inline-block;
+  font-size: 0.55em;
+  transition: transform 0.6s var(--ease-spring);
+}
+
+.brand:hover .tm {
+  transform: rotate(360deg) scale(1.4);
+}
+
+.quip {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  left: 50%;
+  translate: -50% -4px;
+  rotate: -3deg;
+  white-space: nowrap;
+  padding: 0.25rem 0.5rem;
+  background: var(--color-ink);
+  color: var(--color-lime);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s,
+    translate 0.35s var(--ease-spring);
+}
+
+li:hover > .quip,
+li:focus-within > .quip {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+/* Linger for a couple of seconds and a secret sticker shows up under the quip. */
+.secret {
+  position: absolute;
+  top: calc(100% + 2.7rem);
+  left: 50%;
+  translate: -50% 0;
+  rotate: 2deg;
+  white-space: nowrap;
+  padding: 0.25rem 0.55rem;
+  background: var(--color-signal);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0 var(--color-ink);
+  opacity: 0;
+  scale: 0.6;
+  pointer-events: none;
+  transition:
+    opacity 0.15s,
+    scale 0.4s var(--ease-spring);
+}
+
+li:hover > .secret,
+li:focus-within > .secret {
+  opacity: 1;
+  scale: 1;
+  transition-delay: 1.8s;
+}
+
+li:last-child > .secret {
+  left: auto;
+  right: 0;
+  translate: 0 0;
+}
+
+/* Typed "boxbox": every nav link gets a pit-stop tyre change. */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html[data-egg="pitstop"]) [data-nav-link] {
+    animation: pitstop 0.9s var(--ease-expo) both;
+  }
+
+  :global(html[data-egg="pitstop"]) li:nth-child(2) [data-nav-link] {
+    animation-delay: 0.08s;
+  }
+
+  :global(html[data-egg="pitstop"]) li:nth-child(3) [data-nav-link] {
+    animation-delay: 0.16s;
+  }
+
+  :global(html[data-egg="pitstop"]) li:nth-child(4) [data-nav-link] {
+    animation-delay: 0.24s;
+  }
+
+  :global(html[data-egg="pitstop"]) li:nth-child(5) [data-nav-link] {
+    animation-delay: 0.32s;
+  }
+}
+
+@keyframes pitstop {
+  0% {
+    transform: none;
+  }
+  30% {
+    transform: translateY(-6px) rotate(180deg);
+    color: var(--color-signal);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+li:last-child > .quip {
+  left: auto;
+  right: 0;
+  translate: 0 -4px;
+}
+
+li:last-child:hover > .quip,
+li:last-child:focus-within > .quip {
+  translate: 0 0;
+}
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow-y: auto;
+  background: var(--color-night);
+  color: var(--color-paper);
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 0.6s var(--ease-expo);
+}
+
+.menu[data-open="true"] {
+  clip-path: inset(0 0 0 0);
+}
+
+.item {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition:
+    opacity 0.4s,
+    transform 0.6s var(--ease-expo);
+}
+
+.menu[data-open="true"] .item {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(0.15s + var(--i) * 0.06s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu,
+  .item {
+    transition: none;
+  }
+}

@@ -1,0 +1,96 @@
+/* --tilt is randomised per surprise in EasterEggs.tsx. */
+.toast {
+  rotate: var(--tilt, 0deg);
+  animation: pop 0.45s var(--ease-spring) both;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.8);
+    rotate: calc(var(--tilt, 0deg) * -3);
+  }
+}
+
+/* Typed "surya": a ball sails across the screen and is caught at the boundary.
+   Horizontal and vertical motion are separate animations, which makes the arc.
+   --peak (arc height) and data-flip (direction) are randomised per throw. */
+.flight {
+  position: fixed;
+  inset: 0;
+  z-index: 79;
+  pointer-events: none;
+}
+
+.flight[data-flip="true"] {
+  scale: -1 1;
+}
+
+.flight[data-flip="true"] .caught {
+  scale: -1 1;
+}
+
+.ball {
+  position: absolute;
+  left: 4vw;
+  top: 70vh;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 46%, #f5f1e8 46% 54%, transparent 54%),
+    radial-gradient(circle at 35% 35%, #ff7a5c, #c7361c);
+  box-shadow: 2px 3px 0 var(--color-ink);
+  animation:
+    across 1.6s linear both,
+    arc 1.6s cubic-bezier(0.3, 0, 0.7, 1) both;
+}
+
+.caught {
+  position: absolute;
+  right: 6vw;
+  top: 58vh;
+  padding: 0.2rem 0.6rem;
+  background: var(--color-lime);
+  border: 2px solid var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  text-transform: uppercase;
+  rotate: 6deg;
+  animation: stamp 0.35s var(--ease-spring) 1.55s both;
+}
+
+@keyframes across {
+  to {
+    left: 88vw;
+    rotate: 900deg;
+  }
+}
+
+@keyframes arc {
+  50% {
+    top: var(--peak, 12vh);
+  }
+  to {
+    top: 62vh;
+  }
+}
+
+@keyframes stamp {
+  from {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast,
+  .ball,
+  .caught {
+    animation: none;
+  }
+
+  .ball {
+    display: none;
+  }
+}

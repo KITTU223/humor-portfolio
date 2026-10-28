@@ -1,0 +1,281 @@
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+/* Phones get a swipeable row instead of six stacked cards. */
+@media (max-width: 639px) {
+  .grid {
+    grid-auto-flow: column;
+    grid-auto-columns: 82%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+    scrollbar-width: none;
+  }
+
+  .grid > li {
+    scroll-snap-align: start;
+  }
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .grid > li:nth-child(3n + 2) > .card {
+    translate: 0 3rem;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  height: 100%;
+  padding: 1.25rem;
+  border: 2px solid var(--color-ink);
+  background: var(--color-paper);
+  transition:
+    transform 0.5s var(--ease-spring),
+    box-shadow 0.3s;
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: translate(-4px, -4px) rotate(-0.6deg);
+  box-shadow: 8px 8px 0 var(--color-ink);
+}
+
+.card {
+  user-select: none;
+}
+
+.tapHint {
+  color: var(--color-signal);
+}
+
+/* Set by EasterEggs while this card's triple-tap surprise is playing. */
+@media (prefers-reduced-motion: no-preference) {
+  .card[data-egg-pop] {
+    animation: celebrate 0.7s var(--ease-spring);
+    box-shadow: 8px 8px 0 var(--color-signal);
+  }
+}
+
+@keyframes celebrate {
+  20% {
+    transform: scale(1.04) rotate(-2deg);
+  }
+  45% {
+    transform: scale(1.04) rotate(2deg);
+  }
+  70% {
+    transform: scale(1.02) rotate(-1deg);
+  }
+}
+
+.visual {
+  position: relative;
+  height: 8.5rem;
+  padding: 1rem;
+  overflow: hidden;
+  border: 2px solid var(--color-ink);
+}
+
+/* 01 Code: the commit message types itself. */
+.typed {
+  width: 0;
+  margin-top: 0.75rem;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--color-lime);
+  border-right: 2px solid var(--color-lime);
+}
+
+.card:hover .typed,
+.card:focus-visible .typed {
+  width: 29ch;
+  transition: width 1.2s steps(29);
+}
+
+/* 02 F1: draw the racing line, pin the gauge. */
+.track {
+  width: 100%;
+  height: 70%;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.trackBase {
+  stroke: rgb(23 23 23 / 0.15);
+  stroke-width: 12;
+}
+
+.racingLine {
+  stroke: var(--color-signal);
+  stroke-width: 3;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.card:hover .racingLine,
+.card:focus-visible .racingLine {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.9s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.gauge {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.5rem;
+  width: 3.5rem;
+  height: 1.75rem;
+  border: 2px solid var(--color-ink);
+  border-bottom: 0;
+  border-radius: 3.5rem 3.5rem 0 0;
+}
+
+.needle {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 2px;
+  height: 1.4rem;
+  background: var(--color-ink);
+  transform-origin: bottom;
+  rotate: -70deg;
+  transition: rotate 0.8s var(--ease-spring);
+}
+
+.card:hover .needle,
+.card:focus-visible .needle {
+  rotate: 75deg;
+}
+
+/* 03 Cricket: another wrong prediction lands. */
+.flip {
+  display: inline-flex;
+  flex-direction: column;
+  height: 1.25em;
+  line-height: 1.25em;
+  overflow: hidden;
+  color: var(--color-signal);
+}
+
+.flip > span {
+  transition: transform 0.4s var(--ease-spring);
+}
+
+.card:hover .flip > span,
+.card:focus-visible .flip > span {
+  transform: translateY(-100%);
+}
+
+/* 04 Gaming: retro screen wipe. */
+.arcade {
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+}
+
+.arcade > p {
+  grid-area: 1 / 1;
+}
+
+.pressStart {
+  animation: blink 1.2s steps(2) infinite;
+}
+
+.continue {
+  clip-path: inset(0 100% 0 0);
+  color: var(--color-lime);
+}
+
+.card:hover .pressStart,
+.card:focus-visible .pressStart {
+  visibility: hidden;
+}
+
+.card:hover .continue,
+.card:focus-visible .continue {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.5s steps(8);
+}
+
+@keyframes blink {
+  to {
+    opacity: 0;
+  }
+}
+
+/* 05 Business: the stamp. */
+.stamp {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.75rem;
+  padding: 0.15rem 0.6rem;
+  border: 3px solid var(--color-signal);
+  color: var(--color-signal);
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: scale(2.4) rotate(-14deg);
+}
+
+.card:hover .stamp,
+.card:focus-visible .stamp {
+  opacity: 1;
+  transform: scale(1) rotate(-14deg);
+  transition:
+    transform 0.25s cubic-bezier(0.5, 0, 0.75, 0),
+    opacity 0.1s;
+}
+
+/* 06 AI: the robot. */
+.robot {
+  --look-x: 0px;
+  --look-y: 0px;
+  width: 7rem;
+  fill: var(--color-paper);
+  stroke: var(--color-ink);
+  stroke-width: 3;
+}
+
+.eyes {
+  fill: var(--color-ink);
+  translate: var(--look-x) var(--look-y);
+  transition: translate 0.15s ease-out;
+}
+
+.antenna {
+  fill: var(--color-signal);
+}
+
+.mouth {
+  fill: none;
+  stroke-linecap: round;
+  transition: d 0.3s;
+}
+
+.card:hover .mouth {
+  d: path("M48 60q12 8 24 0");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .pressStart {
+    transition: none;
+    animation: none;
+  }
+}

@@ -1,0 +1,82 @@
+.media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 11;
+  border: 1px solid rgb(245 241 232 / 0.15);
+  background: #0b0b0b;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    transform 1s var(--ease-expo),
+    filter 0.6s;
+}
+
+/* A small, deliberate wobble — the image leans in when you show interest. */
+.media:hover .image {
+  transform: scale(1.06) skewY(-1.5deg) rotate(0.5deg);
+  filter: saturate(1.15) contrast(1.05);
+}
+
+.pulse {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pulse {
+    animation: pulse 1.6s ease-out infinite;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* NAKU screens: dashboard in the back, phone overlapping in front. */
+.screens {
+  position: relative;
+  padding-bottom: 12%;
+}
+
+/* No phone to overlap: the screenshot takes the full width. */
+.screens[data-phone="false"] {
+  padding-bottom: 0;
+}
+
+.screens[data-phone="false"] .admin {
+  width: 100%;
+}
+
+.admin {
+  width: 88%;
+  overflow: hidden;
+  border: 2px solid var(--color-ink);
+  box-shadow: 8px 8px 0 var(--color-ink);
+}
+
+.phone {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 30%;
+  overflow: hidden;
+  border: 6px solid var(--color-ink);
+  border-radius: 1.75rem;
+  background: var(--color-ink);
+  rotate: 4deg;
+  box-shadow: 0 20px 40px rgb(0 0 0 / 0.25);
+}
+
+.phone img {
+  border-radius: 1.3rem;
+}
