@@ -100,14 +100,53 @@
   rotate: 4deg;
 }
 
+/* Signed in the empty corner under the footnote, slightly askew like a real autograph. */
+.signature {
+  position: absolute;
+  right: 0;
+  top: 4.25rem;
+  width: clamp(11rem, 22vw, 20rem);
+  rotate: -4deg;
+}
+
+.signatureInk {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--color-lime);
+}
+
+.signatureNote {
+  margin-top: 0.5rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  color: rgb(245 241 232 / 0.6);
+}
+
+.signatureFine {
+  margin-top: 0.25rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(245 241 232 / 0.35);
+}
+
 @media (max-width: 767px) {
   .wordmark {
     padding-bottom: 0;
   }
 
   .tape,
-  .footnote {
+  .footnote,
+  .signature {
     position: static;
+  }
+
+  .signature {
+    margin-top: 1.5rem;
+    width: min(16rem, 80%);
   }
 
   .tape {

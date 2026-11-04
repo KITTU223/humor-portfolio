@@ -1,5 +1,6 @@
 import { site } from "@/data/site";
 import styles from "./Footer.module.css";
+import Signature from "./Signature";
 
 const links = [
   { label: "Email", href: `mailto:${site.email}` },
@@ -28,6 +29,7 @@ export default function Footer() {
           <p className={styles.footnote}>
             <span className="text-lime">*</span> ™ pending. Lawyers are expensive.
           </p>
+          <Signature />
         </div>
 
         <div className="mt-10 flex flex-col gap-8 border-t border-paper/15 pt-8 md:flex-row md:items-start md:justify-between">

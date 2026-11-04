@@ -28,7 +28,14 @@ export function setupReveals() {
       gsap.fromTo(
         els,
         { autoAlpha: 0, y: 40 },
-        { autoAlpha: 1, y: 0, duration: 0.9, ease: "expo.out", stagger: 0.08, clearProps: "opacity,visibility,transform" },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.9,
+          ease: "expo.out",
+          stagger: 0.08,
+          clearProps: "opacity,visibility,transform",
+        },
       );
     },
   });
@@ -65,7 +72,12 @@ export function setupReveals() {
         gsap.fromTo(
           el,
           { clipPath: "inset(100% 0% 0% 0%)" },
-          { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: "expo.out", clearProps: "clipPath" },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 1.3,
+            ease: "expo.out",
+            clearProps: "clipPath",
+          },
         );
       },
     });
@@ -81,7 +93,14 @@ export function setupReveals() {
         gsap.fromTo(
           el.querySelectorAll(".line > span"),
           { yPercent: 125, y: 0 },
-          { yPercent: 0, y: 0, duration: 1.1, ease: "expo.out", stagger: 0.09, clearProps: "transform" },
+          {
+            yPercent: 0,
+            y: 0,
+            duration: 1.1,
+            ease: "expo.out",
+            stagger: 0.09,
+            clearProps: "transform",
+          },
         );
       },
     });
@@ -101,7 +120,10 @@ export function setupReveals() {
           duration: 1.4,
           ease: "power3.out",
           onUpdate: () => {
-            el.textContent = String(Math.round(counter.value)).padStart(width, "0");
+            el.textContent = String(Math.round(counter.value)).padStart(
+              width,
+              "0",
+            );
           },
         }),
     });
@@ -114,7 +136,12 @@ export function setupReveals() {
       {
         scaleY: 1,
         ease: "none",
-        scrollTrigger: { trigger: el.parentElement, start: "top 60%", end: "bottom 60%", scrub: true },
+        scrollTrigger: {
+          trigger: el.parentElement,
+          start: "top 60%",
+          end: "bottom 60%",
+          scrub: true,
+        },
       },
     );
   });
