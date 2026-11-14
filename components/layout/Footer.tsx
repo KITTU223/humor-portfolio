@@ -1,6 +1,7 @@
 import { site } from "@/data/site";
 import styles from "./Footer.module.css";
 import Signature from "./Signature";
+import FooterMotion from "./FooterMotion";
 
 const links = [
   { label: "Email", href: `mailto:${site.email}` },
@@ -17,7 +18,7 @@ export default function Footer() {
         <div className={styles.wordmark} aria-hidden="true">
           <p className={styles.letters}>
             {"KRUTART".split("").map((letter, i) => (
-              <span key={i} className={styles.letter}>
+              <span key={i} className={styles.letter} data-footer-letter data-enter>
                 {letter}
               </span>
             ))}
@@ -59,6 +60,7 @@ export default function Footer() {
           Psst — this site has secrets. Try ↑ ↑ ↓ ↓ ← → ← → B A, typing “boxbox”, or hovering a nav link for far too long.
         </p>
       </div>
+      <FooterMotion />
     </footer>
   );
 }

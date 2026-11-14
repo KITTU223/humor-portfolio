@@ -1,5 +1,6 @@
 import CopyEmail from "@/components/contact/CopyEmail";
 import Magnetic from "@/components/ui/Magnetic";
+import ContactMotion from "@/components/contact/ContactMotion";
 import { site } from "@/data/site";
 
 const mailto = `mailto:${site.email}?subject=${encodeURIComponent("Let's build something")}`;
@@ -22,7 +23,10 @@ export default function Contact() {
           </span>
           <span className="line">
             <span>
-              I know a <span className="font-serif normal-case italic">guy.</span>
+              I know a{" "}
+              <span className="inline-block origin-bottom-left font-serif normal-case italic" data-contact-guy>
+                guy.
+              </span>
             </span>
           </span>
         </h2>
@@ -37,11 +41,16 @@ export default function Contact() {
               let&apos;s talk.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
-              <Magnetic>
-                <a href={mailto} className="btn btn-primary min-h-16 px-8 text-base">
-                  Let&apos;s build something <span aria-hidden="true">↗</span>
-                </a>
-              </Magnetic>
+              <div data-contact-cta data-enter>
+                <Magnetic>
+                  <a href={mailto} className="btn btn-primary min-h-16 px-8 text-base" data-contact-link>
+                    Let&apos;s build something{" "}
+                    <span className="inline-block" aria-hidden="true" data-contact-arrow>
+                      ↗
+                    </span>
+                  </a>
+                </Magnetic>
+              </div>
               <Magnetic>
                 <a href={site.links.krutonic} target="_blank" rel="noopener noreferrer" className="btn btn-ghost min-h-16 px-8 text-base">
                   See Krutonic <span aria-hidden="true">↗</span>
@@ -72,6 +81,7 @@ export default function Contact() {
           </div>
         </div>
       </div>
+      <ContactMotion />
     </section>
   );
 }

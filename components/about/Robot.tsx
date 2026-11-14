@@ -35,7 +35,7 @@ export default function Robot() {
   return (
     <svg ref={ref} className={styles.robot} viewBox="0 0 120 90" aria-hidden="true">
       <line x1="60" y1="6" x2="60" y2="18" />
-      <circle cx="60" cy="5" r="4" className={styles.antenna} />
+      <circle cx="60" cy="5" r="4" className={styles.antenna} data-antenna />
       <rect x="22" y="18" width="76" height="56" rx="14" />
       <g className={styles.eyes}>
         <circle cx="45" cy="44" r="7" />

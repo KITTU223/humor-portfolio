@@ -20,8 +20,14 @@ npm run lint
 
 ## Motion notes
 
-- The intro runs once per session. `<html data-intro>` is set by an inline script in `app/layout.tsx`
-  before paint; the hero's entrance is pure CSS keyed off that attribute.
+- The intro runs once per session (a shorter cut for people who've visited before). `<html data-intro>`
+  and `<html data-hero>` are set by an inline script in `app/layout.tsx` before paint, each with a
+  safety timeout. The hero entrance is an Anime.js timeline that starts when the intro hands over.
+- Two animation libraries, one rule: they never both write `transform` on the same element.
+  GSAP owns Lenis sync, `data-reveal` scroll reveals, magnetic buttons, hero parallax and the
+  signature. Anime.js (`lib/anime.ts`, `hooks/useAnimeScope.ts`) owns the intro, hero entrance,
+  card tricks, case-study set pieces, the stack terminal and the nonsense. Anime reveals opt in
+  with `data-enter` (hidden until `data-entered`) and `data-marker` (highlighter sweep).
 - Lenis is driven by GSAP's ticker so it stays in sync with ScrollTrigger. Both are skipped entirely
   for `prefers-reduced-motion`, and nothing is hidden in that mode.
 - CSS modules are excluded from the Tailwind Turbopack loader in `next.config.ts`; they don't use

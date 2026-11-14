@@ -4,7 +4,7 @@ import { gsap, ScrollTrigger } from "./motion";
  * Declarative scroll reveals. Markup opts in with data attributes:
  *   data-reveal="fade"   fade + rise
  *   data-reveal="joke"   same, but arrives late and slightly crooked (comedic timing)
- *   data-reveal="mask"   clip-path wipe, for images
+ *   data-reveal="mask"   clip-path wipe, for images; the image inside settles from a slight zoom
  *   data-reveal="lines"  .line > span children slide up in sequence
  *   data-count="12"      number counts up
  *   data-progress        scaleY scrubbed against its parent
@@ -79,6 +79,11 @@ export function setupReveals() {
             clearProps: "clipPath",
           },
         );
+        // A CSS variable, not transform: the images keep their own CSS hover transforms.
+        const img = el.querySelector("img");
+        if (img) {
+          gsap.fromTo(img, { "--zoom": 1.14 }, { "--zoom": 1, duration: 1.8, ease: "expo.out", clearProps: "--zoom" });
+        }
       },
     });
   });

@@ -1,7 +1,10 @@
 import ProjectPanel from "@/components/projects/ProjectPanel";
 import NakuCaseStudy from "@/components/projects/NakuCaseStudy";
 import CaseStudy from "@/components/projects/CaseStudy";
+import ProjectsMotion from "@/components/projects/ProjectsMotion";
 import { caseStudies, projects } from "@/data/projects";
+
+const caseVariants: Record<string, "invoice" | "arcade"> = { "transport-billing": "invoice", vonlylegal: "arcade" };
 
 export default function Projects() {
   return (
@@ -28,11 +31,14 @@ export default function Projects() {
           {projects.map((project, index) => (
             <ProjectPanel key={project.slug} project={project} index={index}>
               {project.slug === "naku-laundry" && <NakuCaseStudy />}
-              {caseStudies[project.slug] && <CaseStudy name={project.name} study={caseStudies[project.slug]} />}
+              {caseStudies[project.slug] && (
+                <CaseStudy name={project.name} study={caseStudies[project.slug]} variant={caseVariants[project.slug]} />
+              )}
             </ProjectPanel>
           ))}
         </div>
       </div>
+      <ProjectsMotion />
     </section>
   );
 }

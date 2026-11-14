@@ -1,4 +1,5 @@
 import { journey } from "@/data/journey";
+import JourneyMotion from "@/components/journey/JourneyMotion";
 
 const plateColors = ["bg-paper-deep", "bg-lime", "bg-paper-deep", "bg-blue text-paper", "bg-paper-deep", "bg-signal"];
 
@@ -25,16 +26,26 @@ export default function Journey() {
           </span>
 
           {journey.map((step, index) => (
-            <li key={step.title} className="relative grid gap-6 pb-20 pl-10 last:pb-0 lg:grid-cols-12 lg:pl-0">
+            <li key={step.title} className="relative grid gap-6 pb-20 pl-10 last:pb-0 lg:grid-cols-12 lg:pl-0" data-chapter>
               <span
                 className="absolute top-3 left-0 h-5 w-5 rounded-full border-2 border-ink bg-paper lg:left-[calc(25%-0.6rem)]"
                 aria-hidden="true"
+                data-chapter-dot
               />
 
               <div className="lg:col-span-3">
                 <p className="sticky top-24 font-display leading-none">
                   <span className="annot block text-muted">Chapter</span>
-                  <span className="text-7xl sm:text-8xl">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="inline-flex overflow-hidden text-7xl sm:text-8xl">
+                    {String(index + 1)
+                      .padStart(2, "0")
+                      .split("")
+                      .map((digit, i) => (
+                        <span key={i} className="inline-block" data-chapter-digit data-enter>
+                          {digit}
+                        </span>
+                      ))}
+                  </span>
                 </p>
               </div>
 
@@ -45,12 +56,18 @@ export default function Journey() {
                   }`}
                   data-reveal="fade"
                 >
-                  <p className="annot opacity-70">{step.subtitle}</p>
-                  <h3 className="mt-2 text-[clamp(2.4rem,6vw,4.5rem)] leading-[0.9]">{step.title}</h3>
-                  <p className="mt-4 max-w-xl text-lg leading-relaxed">{step.description}</p>
+                  <p className="annot opacity-70" data-chapter-sub data-enter>
+                    {step.subtitle}
+                  </p>
+                  <h3 className="mt-2 text-[clamp(2.4rem,6vw,4.5rem)] leading-[0.9]" data-chapter-title data-enter>
+                    {step.title}
+                  </h3>
+                  <p className="mt-4 max-w-xl text-lg leading-relaxed" data-chapter-text data-enter>
+                    {step.description}
+                  </p>
                   <ul className="mt-5 flex flex-wrap gap-2" aria-label="Focus">
                     {step.tags.map((tag) => (
-                      <li key={tag} className="tag">
+                      <li key={tag} className="tag" data-chapter-tag data-enter>
                         {tag}
                       </li>
                     ))}
@@ -64,6 +81,7 @@ export default function Journey() {
           ))}
         </ol>
       </div>
+      <JourneyMotion />
     </section>
   );
 }

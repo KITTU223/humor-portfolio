@@ -2,9 +2,18 @@ import Image from "next/image";
 import type { CaseStudy as CaseStudyData } from "@/data/projects";
 import styles from "./Projects.module.css";
 
-type Props = { name: string; study: CaseStudyData };
+type Props = { name: string; study: CaseStudyData; variant?: "invoice" | "arcade" };
 
-export default function CaseStudy({ name, study }: Props) {
+// `variant` swaps the generic reveals for ones that suit the project (see ProjectsMotion.tsx):
+// "invoice" prints the screenshot and rules the notes in like a ledger; "arcade" pixel-wipes.
+export default function CaseStudy({ name, study, variant }: Props) {
+  const screenReveal =
+    variant === "invoice" ? { "data-print": "", "data-enter": "" }
+    : variant === "arcade" ? { "data-pixel-wipe": "", "data-enter": "" }
+    : { "data-reveal": "mask" };
+  const phoneReveal = variant === "arcade" ? { "data-pixel-pop": "", "data-enter": "" } : { "data-reveal": "mask" };
+  const stepReveal = variant === "invoice" ? { "data-ledger": "", "data-enter": "" } : { "data-reveal": "fade" };
+
   const { screen, phone } = study;
   const steps = [
     ["Challenge", study.challenge],
@@ -24,11 +33,11 @@ export default function CaseStudy({ name, study }: Props) {
 
       <div className="mt-10 grid gap-10 lg:grid-cols-12">
         <div className={`${styles.screens} lg:col-span-7`} data-phone={Boolean(phone)}>
-          <figure className={styles.admin} data-reveal="mask">
+          <figure className={styles.admin} {...screenReveal}>
             <Image src={screen.src} alt={screen.alt} width={screen.width} height={screen.height} sizes="(min-width: 1024px) 45vw, 90vw" />
           </figure>
           {phone && (
-            <figure className={styles.phone} data-reveal="mask">
+            <figure className={styles.phone} {...phoneReveal}>
               <Image src={phone.src} alt={phone.alt} width={phone.width} height={phone.height} sizes="(min-width: 1024px) 14vw, 36vw" />
             </figure>
           )}
@@ -36,7 +45,7 @@ export default function CaseStudy({ name, study }: Props) {
 
         <dl className="grid gap-6 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
           {steps.map(([title, text]) => (
-            <div key={title} className="border-t-2 border-ink pt-3" data-reveal="fade">
+            <div key={title} className="border-t-2 border-ink pt-3" {...stepReveal}>
               <dt className="annot text-muted">{title}</dt>
               <dd className="mt-2 leading-relaxed">{text}</dd>
             </div>

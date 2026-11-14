@@ -12,6 +12,10 @@ const statusStyle: Record<ProjectStatus, string> = {
 
 type Props = { project: Project; index: number; children?: React.ReactNode };
 
+// How each project's tech tags arrive (ProjectsMotion.tsx). Most are stuck on like stickers;
+// the billing app's are entered like ledger lines, the game-rental site's pop in 8-bit.
+const tagStyle: Record<string, string> = { "transport-billing": "ledger", vonlylegal: "arcade" };
+
 export default function ProjectPanel({ project, index, children }: Props) {
   const number = String(index + 1).padStart(2, "0");
   const flipped = index % 2 === 1;
@@ -64,9 +68,10 @@ export default function ProjectPanel({ project, index, children }: Props) {
           <ul
             className="mt-8 flex flex-wrap gap-2 text-paper/70"
             aria-label="Technology"
+            data-tags={tagStyle[project.slug] ?? "sticker"}
           >
             {project.stack.map((tech) => (
-              <li key={tech} className="tag">
+              <li key={tech} className="tag" data-enter>
                 {tech}
               </li>
             ))}

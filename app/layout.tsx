@@ -68,8 +68,10 @@ const personSchema = {
   sameAs: [site.links.github, site.links.linkedin, site.links.krutonic],
 };
 
-// Runs before paint so the intro never flashes for returning visitors.
-const introFlag = `(function(){var d=document.documentElement;d.classList.add("js");var seen=false;try{seen=!!sessionStorage.getItem("intro-seen")}catch(e){}d.dataset.intro=seen||location.pathname!=="/"?"done":"running";setTimeout(function(){d.dataset.intro="done"},9000)})();`;
+// Runs before paint so the intro never flashes for returning visitors. The hero stays "pending"
+// until its entrance (components/hero/HeroEntrance.tsx) plays; both have a safety timeout so a
+// failed script can never leave the page covered or the headline hidden.
+const introFlag = `(function(){var d=document.documentElement;d.classList.add("js");var seen=false;try{seen=!!sessionStorage.getItem("intro-seen")}catch(e){}d.dataset.intro=seen||location.pathname!=="/"?"done":"running";d.dataset.hero="pending";setTimeout(function(){d.dataset.intro="done"},9000);setTimeout(function(){if(d.dataset.hero==="pending")d.dataset.hero="done"},12000)})();`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

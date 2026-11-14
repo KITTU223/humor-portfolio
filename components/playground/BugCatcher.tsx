@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play, RotateCcw } from "lucide-react";
+import { animate, createTimeline, steps, utils } from "animejs";
+import { ease, prefersReducedMotion } from "@/lib/anime";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { createGame, type Game } from "./bugGame";
 
@@ -21,6 +23,10 @@ export default function BugCatcher() {
   const reduced = useReducedMotion();
   const [phase, setPhase] = useState<Phase>("idle");
   const [score, setScore] = useState(0);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const finalRef = useRef<HTMLSpanElement>(null);
+  const scoreRef = useRef<HTMLSpanElement>(null);
+  const goRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
@@ -50,7 +56,51 @@ export default function BugCatcher() {
     };
   }, [reduced]);
 
+  // Game-state transitions. The canvas game itself is untouched; this is all the chrome around it.
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    if (phase === "playing") return;
+    const panel = panelRef.current;
+    if (!panel) return;
+    if (phase === "paused") {
+      animate(panel, { opacity: [0, 1], translateY: [-16, 0], duration: 240, ease: steps(4) });
+      return;
+    }
+    const intro = animate(panel, { opacity: [0, 1], translateY: [12, 0], duration: 360, ease: ease.paper });
+    if (phase !== "over" || !finalRef.current) return;
+    // The final score counts up like an arcade tally, then the verdict follows.
+    const tally = { value: 0 };
+    const final = finalRef.current;
+    const verdicts = panel.querySelectorAll("[data-verdict]");
+    final.textContent = "0";
+    utils.set(verdicts, { opacity: 0 });
+    const count = createTimeline({ delay: 200 })
+      .add(tally, {
+        value: score,
+        duration: Math.min(1200, 150 + score * 60),
+        ease: "outQuad",
+        onUpdate: () => (final.textContent = String(Math.round(tally.value))),
+      })
+      .add(final, { scale: [1.25, 1], duration: 300, ease: "outBack(2)" })
+      .add(verdicts, { opacity: [0, 1], translateY: [8, 0], duration: 400, ease: ease.paper }, "-=150");
+    return () => {
+      intro.pause();
+      count.pause();
+    };
+    // Score is final by the time phase is "over"; re-running on score changes isn't wanted.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
+
+  // Every catch: the score jumps in chunky arcade steps.
+  useEffect(() => {
+    if (score === 0 || !scoreRef.current || prefersReducedMotion()) return;
+    animate(scoreRef.current, { scale: [1.7, 1], duration: 260, ease: steps(3) });
+  }, [score]);
+
   const start = () => {
+    if (goRef.current && !prefersReducedMotion()) {
+      animate(goRef.current, { opacity: [0, 1, 1, 0], scale: [0.6, 1.1, 1.1, 1.3], duration: 700, ease: "outQuad" });
+    }
     setScore(0);
     setPhase("playing");
     gameRef.current?.start();
@@ -82,7 +132,7 @@ export default function BugCatcher() {
 
         {phase !== "playing" && (
           <div className="absolute inset-0 grid place-items-center bg-paper/85 p-6 text-center backdrop-blur-[2px]">
-            <div className="max-w-md">
+            <div ref={panelRef} className="max-w-md">
               {phase === "idle" && (
                 <>
                   <p className="font-display text-5xl uppercase sm:text-6xl">
@@ -100,12 +150,19 @@ export default function BugCatcher() {
               {phase === "over" && (
                 <div aria-live="polite">
                   <p className="annot text-muted">Final score</p>
-                  <p className="font-display text-7xl">{score}</p>
-                  <p className="mt-2 font-serif text-2xl italic">
+                  <p className="font-display text-7xl">
+                    <span ref={finalRef} className="inline-block" aria-hidden="true">
+                      {score}
+                    </span>
+                    <span className="sr-only">{score}</span>
+                  </p>
+                  <p className="mt-2 font-serif text-2xl italic" data-verdict>
                     Congratulations. You&apos;re now qualified for production
                     support.
                   </p>
-                  <p className="mt-2 text-muted">{verdict(score)}</p>
+                  <p className="mt-2 text-muted" data-verdict>
+                    {verdict(score)}
+                  </p>
                 </div>
               )}
               <button
@@ -127,11 +184,21 @@ export default function BugCatcher() {
             </div>
           </div>
         )}
+        <p
+          ref={goRef}
+          className="pointer-events-none absolute inset-0 grid place-items-center font-display text-7xl text-blue uppercase opacity-0"
+          aria-hidden="true"
+        >
+          Go!
+        </p>
       </div>
 
       <div className="mt-3 flex items-center justify-between">
         <p className="annot text-muted" aria-live="off">
-          Score: <span className="text-ink">{score}</span>
+          Score:{" "}
+          <span ref={scoreRef} className="inline-block text-ink">
+            {score}
+          </span>
         </p>
         <button
           type="button"

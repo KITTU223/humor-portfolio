@@ -1,5 +1,6 @@
 import Image from "next/image";
 import PersonalityCards from "@/components/about/PersonalityCards";
+import AboutMotion from "@/components/about/AboutMotion";
 
 const specs = [
   ["Name", "Krutarth Chauhan"],
@@ -28,7 +29,10 @@ export default function About() {
             </span>
             <span className="line">
               <span>
-                this <span className="bg-[linear-gradient(transparent_45%,var(--color-lime)_45%,var(--color-lime)_88%,transparent_88%)] px-2">guy?</span>
+                this{" "}
+                <span className="marker bg-[linear-gradient(transparent_45%,var(--color-lime)_45%,var(--color-lime)_88%,transparent_88%)] px-2" data-marker>
+                  guy?
+                </span>
               </span>
             </span>
           </h2>
@@ -76,7 +80,15 @@ export default function About() {
             <span className="tape absolute -top-3 left-6">
               Spec sheet · v26
             </span>
-            <div className="flex items-center gap-4 border-b-2 border-ink pb-4">
+            <span
+              className="absolute -top-4 right-5 rotate-6 border-2 border-signal bg-paper-deep px-2 font-display text-lg leading-snug text-signal uppercase"
+              data-stamp
+              data-enter
+              aria-hidden="true"
+            >
+              Verified <span className="font-mono text-[0.6rem] tracking-wide">(3rd try)</span>
+            </span>
+            <div className="flex items-center gap-4 border-b-2 border-ink pb-4" data-spec-header>
               <Image
                 src="/images/photo-suit-avatar.webp"
                 alt=""
@@ -96,7 +108,7 @@ export default function About() {
             </div>
             <dl className="divide-y divide-ink/15 font-mono text-sm">
               {specs.map(([label, value]) => (
-                <div key={label} className="flex justify-between gap-4 py-2.5">
+                <div key={label} className="flex justify-between gap-4 py-2.5" data-spec-row data-enter>
                   <dt className="text-muted uppercase">{label}</dt>
                   <dd className="text-right">{value}</dd>
                 </div>
@@ -115,6 +127,7 @@ export default function About() {
           <PersonalityCards />
         </div>
       </div>
+      <AboutMotion />
     </section>
   );
 }

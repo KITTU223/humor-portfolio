@@ -1,20 +1,53 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { animate, createTimeline } from "animejs";
 import { aiSuggestions, askUselessAi } from "@/data/uselessAi";
+import { ease, prefersReducedMotion, springs } from "@/lib/anime";
 
 type Exchange = { id: number; question: string; answer?: string };
 
-const THINKING_MS = 650;
+// Long enough for the joke: two dots on time, the third one arrives after a worrying pause.
+const THINKING_MS = 1150;
+const DOT_DELAYS = [0, 140, 560];
 
 export default function UselessAI() {
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<Exchange[]>([]);
   const timer = useRef<number>(undefined);
   const nextId = useRef(0);
-  const thinking = history.at(-1)?.answer === undefined && history.length > 0;
+  const listRef = useRef<HTMLDivElement>(null);
+  const latest = history.at(-1);
+  const thinking = latest !== undefined && latest.answer === undefined;
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  // Question slides in from your side; while it "thinks", the dots bounce (only while thinking).
+  useEffect(() => {
+    if (!latest || prefersReducedMotion()) return;
+    const exchange = listRef.current?.querySelector(`[data-exchange="${latest.id}"]`);
+    if (!exchange) return;
+
+    if (latest.answer === undefined) {
+      animate(exchange.querySelector("[data-question]")!, { opacity: [0, 1], translateX: [24, 0], duration: 360, ease: ease.paper });
+      const dots = animate(exchange.querySelectorAll("[data-dot]"), {
+        translateY: [0, -5, 0],
+        duration: 360,
+        delay: (_target: unknown, i = 0) => DOT_DELAYS[i],
+        loop: true,
+        loopDelay: 220,
+        ease: "inOutSine",
+      });
+      return () => {
+        dots.pause();
+      };
+    }
+
+    // The answer: the bubble pops out of its corner, then the words are wiped on.
+    createTimeline()
+      .add(exchange.querySelector("[data-answer]")!, { scale: [0.7, 1], opacity: [0, 1], ease: springs.sticker() })
+      .add(exchange.querySelector("[data-answer-text]")!, { clipPath: ["inset(0 100% 0 0)", "inset(0 0% 0 0)"], duration: 520, ease: ease.machine }, "<<+=80");
+  }, [latest]);
 
   const ask = (question: string) => {
     const trimmed = question.trim();
@@ -30,16 +63,33 @@ export default function UselessAI() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="min-h-56 flex-1 space-y-4" aria-live="polite">
+      <div ref={listRef} className="min-h-56 flex-1 space-y-4" aria-live="polite">
         {history.length === 0 && (
           <p className="font-serif text-xl text-muted italic">It knows nothing. It&apos;s very confident about it.</p>
         )}
         {history.map((item) => (
-          <div key={item.id} className="space-y-2">
-            <p className="ml-auto w-fit max-w-[85%] bg-ink px-4 py-2 text-paper">{item.question}</p>
-            <p className="w-fit max-w-[85%] border-2 border-ink bg-lime px-4 py-2 font-medium">
-              {item.answer ?? <span className="font-mono text-sm">Consulting a sticky note…</span>}
+          <div key={item.id} className="space-y-2" data-exchange={item.id}>
+            <p className="ml-auto w-fit max-w-[85%] bg-ink px-4 py-2 text-paper" data-question>
+              {item.question}
             </p>
+            {item.answer === undefined ? (
+              <p className="w-fit max-w-[85%] border-2 border-ink bg-lime px-4 py-2 font-mono text-sm">
+                Consulting a sticky note
+                <span aria-hidden="true">
+                  {[0, 1, 2].map((dot) => (
+                    <span key={dot} className="inline-block" data-dot>
+                      .
+                    </span>
+                  ))}
+                </span>
+              </p>
+            ) : (
+              <p className="w-fit max-w-[85%] origin-bottom-left border-2 border-ink bg-lime px-4 py-2 font-medium" data-answer>
+                <span className="block" data-answer-text>
+                  {item.answer}
+                </span>
+              </p>
+            )}
           </div>
         ))}
       </div>

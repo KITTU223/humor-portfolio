@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { gsap } from "@/lib/motion";
+import { animate } from "animejs";
+import { prefersReducedMotion } from "@/lib/anime";
+import { gsap, onHeroDone } from "@/lib/motion";
 import styles from "./Hero.module.css";
 
 // Each layer drifts by its data-depth as the cursor moves over the hero.
 export default function HeroPortrait() {
   const ref = useRef<HTMLDivElement>(null);
+  const flashRef = useRef<HTMLSpanElement>(null);
   const [real, setReal] = useState(false);
 
   useEffect(() => {
@@ -18,14 +21,9 @@ export default function HeroPortrait() {
     );
     if (!root || !section || !canHover.matches) return;
 
-    const layers = gsap.utils
-      .toArray<HTMLElement>("[data-depth]", root)
-      .map((el) => ({
-        depth: Number(el.dataset.depth),
-        x: gsap.quickTo(el, "x", { duration: 0.9, ease: "power3.out" }),
-        y: gsap.quickTo(el, "y", { duration: 0.9, ease: "power3.out" }),
-      }));
-
+    // The entrance (HeroEntrance) animates these same layers with Anime.js, so the parallax only
+    // takes over their transforms once it has finished.
+    let layers: { depth: number; x: gsap.QuickToFunc; y: gsap.QuickToFunc }[] = [];
     const onMove = (event: PointerEvent) => {
       const dx = event.clientX / window.innerWidth - 0.5;
       const dy = event.clientY / window.innerHeight - 0.5;
@@ -35,20 +33,44 @@ export default function HeroPortrait() {
       });
     };
 
-    section.addEventListener("pointermove", onMove);
-    return () => section.removeEventListener("pointermove", onMove);
+    const stopWaiting = onHeroDone(() => {
+      layers = gsap.utils.toArray<HTMLElement>("[data-depth]", root).map((el) => ({
+        depth: Number(el.dataset.depth),
+        x: gsap.quickTo(el, "x", { duration: 0.9, ease: "power3.out" }),
+        y: gsap.quickTo(el, "y", { duration: 0.9, ease: "power3.out" }),
+      }));
+      section.addEventListener("pointermove", onMove);
+    });
+
+    return () => {
+      stopWaiting();
+      section.removeEventListener("pointermove", onMove);
+    };
   }, []);
+
+  // The real photo still wipes in with CSS (so it works everywhere); this adds the camera flash
+  // going to the real one, and a little print-settle going back to the comic.
+  const toggle = () => {
+    const next = !real;
+    setReal(next);
+    if (prefersReducedMotion()) return;
+    const img = ref.current?.querySelector<HTMLElement>(next ? "[data-photo-real]" : "[data-photo-comic]");
+    if (next && flashRef.current) {
+      animate(flashRef.current, { opacity: [0, 0.9, 0], duration: 420, ease: "outQuad" });
+    }
+    if (img) animate(img, { scale: [1.08, 1], duration: 900, ease: "outExpo" });
+  };
 
   return (
     <div ref={ref} className={styles.portrait}>
-      <div data-depth="-30" className={styles.sun} aria-hidden="true" />
-      <div data-depth="-55" className={styles.block} aria-hidden="true" />
+      <div data-depth="-30" data-hero-part="sun" className={`${styles.sun} ${styles.enter}`} aria-hidden="true" />
+      <div data-depth="-55" data-hero-part="block" className={`${styles.block} ${styles.enter}`} aria-hidden="true" />
 
       <figure
         data-depth="18"
         data-hero-portrait
         data-real={real}
-        className={styles.photo}
+        className={`${styles.photo} ${styles.enter}`}
       >
         <Image
           src="/images/photo-suit-comic.webp"
@@ -58,6 +80,7 @@ export default function HeroPortrait() {
           sizes="(min-width: 1024px) 34vw, 78vw"
           loading="eager"
           fetchPriority="high"
+          data-photo-comic
           className="h-full w-full object-cover"
         />
         <Image
@@ -70,8 +93,10 @@ export default function HeroPortrait() {
           width={510}
           height={638}
           sizes="(min-width: 1024px) 34vw, 78vw"
+          data-photo-real
           className={`${styles.realPhoto} h-full w-full object-cover`}
         />
+        <span ref={flashRef} className={styles.flash} aria-hidden="true" />
 
         <span
           className={`${styles.tapeCorner} ${styles.tapeLeft}`}
@@ -84,9 +109,10 @@ export default function HeroPortrait() {
       </figure>
       <button
         type="button"
-        onClick={() => setReal((value) => !value)}
+        onClick={toggle}
         aria-pressed={real}
-        className={`${styles.toggle} tape`}
+        data-hero-label
+        className={`${styles.toggle} ${styles.enter} tape`}
       >
         {real
           ? "Fine. This is the real one · Back to 2D"
@@ -95,14 +121,16 @@ export default function HeroPortrait() {
 
       <p
         data-depth="40"
-        className={`${styles.label} ${styles.labelHuman}`}
+        data-hero-label
+        className={`${styles.label} ${styles.labelHuman} ${styles.enter}`}
         data-boast="Certified genius. Allegedly."
       >
         Human developer. Allegedly.
       </p>
       <p
         data-depth="60"
-        className={`${styles.label} ${styles.labelFuel}`}
+        data-hero-label
+        className={`${styles.label} ${styles.labelFuel} ${styles.enter}`}
         data-boast="Has never missed a deadline (lie)"
       >
         Runs on chai and questionable deadlines.
@@ -110,7 +138,8 @@ export default function HeroPortrait() {
 
       <svg
         data-depth="25"
-        className={styles.badge}
+        data-hero-part="badge"
+        className={`${styles.badge} ${styles.enter}`}
         viewBox="0 0 120 120"
         aria-hidden="true"
       >

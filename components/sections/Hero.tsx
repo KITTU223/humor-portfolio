@@ -1,14 +1,15 @@
 import HeroPortrait from "@/components/hero/HeroPortrait";
 import HireButton from "@/components/hero/HireButton";
+import HeroEntrance from "@/components/hero/HeroEntrance";
 import Magnetic from "@/components/ui/Magnetic";
 import styles from "@/components/hero/Hero.module.css";
 
 const roles = ["Full Stack Developer", "Creative Developer", "Product Builder", "Founder of Krutonic", "Based in Gujarat, India"];
 
-function Line({ i, children }: { i: number; children: React.ReactNode }) {
+function Line({ children }: { children: React.ReactNode }) {
   return (
     <span className="line">
-      <span className={styles.rise} style={{ "--i": i } as React.CSSProperties}>
+      <span className={styles.rise} data-hero-line>
         {children}
       </span>
     </span>
@@ -20,24 +21,26 @@ export default function Hero() {
     <section id="top" className="relative overflow-hidden pt-24 lg:pt-28" aria-labelledby="hero-title">
       <div className="shell grid items-center gap-y-14 lg:grid-cols-12 lg:gap-x-10">
         <div className="lg:col-span-12 lg:col-start-1 lg:row-start-1">
-          <p className="annot mb-5 flex items-center gap-3 text-muted">
+          <p className={`${styles.enter} annot mb-5 flex items-center gap-3 text-muted`} data-hero-eyebrow>
             <span className="inline-block h-2 w-2 rounded-full bg-signal" aria-hidden="true" />
             Portfolio of Krutarth Chauhan · Est. questionable
           </p>
 
           <h1 id="hero-title" className={styles.headline}>
-            <Line i={0}>I make</Line>
-            <Line i={1}>websites.</Line>
-            <Line i={2}>And other</Line>
-            <Line i={3}>
-              <span className={styles.questionable}>Questionable</span>
+            <Line>I make</Line>
+            <Line>websites.</Line>
+            <Line>And other</Line>
+            <Line>
+              <span className={styles.questionable} data-hero-questionable>
+                Questionable
+              </span>
             </Line>
-            <Line i={4}>decisions.</Line>
+            <Line>decisions.</Line>
           </h1>
 
-          <p className={`${styles.annotation} mt-3 flex items-start gap-2 pl-[30%] font-serif text-xl text-blue italic sm:text-2xl`}>
+          <p data-hero-note className={`${styles.annotation} ${styles.enter} mt-3 flex items-start gap-2 pl-[30%] font-serif text-xl text-blue italic sm:text-2xl`}>
             <svg width="54" height="40" viewBox="0 0 54 40" fill="none" aria-hidden="true" className="-mt-6 shrink-0">
-              <path d="M50 36C34 34 14 26 6 6m0 0 1 11M6 6l10 4" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+              <path data-hero-arrow d="M50 36C34 34 14 26 6 6m0 0 1 11M6 6l10 4" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
             </svg>
             <span data-boast="Exclusively genius decisions, actually.">Mostly good decisions, to be fair.</span>
           </p>
@@ -48,7 +51,7 @@ export default function Hero() {
         </div>
 
         <div className="grid gap-8 lg:col-span-12 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-6">
+          <div className={`${styles.enter} lg:col-span-6`} data-hero-copy>
             <p className="max-w-xl text-lg leading-relaxed sm:text-xl">
               Hey, I&apos;m Krutarth. Full Stack Developer, creative problem solver, and founder of Krutonic. I turn
               complicated ideas into digital products that actually work.
@@ -61,17 +64,21 @@ export default function Hero() {
             </p>
           </div>
           <div className="flex flex-wrap items-start gap-4 pb-10 lg:col-span-6 lg:justify-end">
-            <Magnetic>
-              <a href="#work" className="btn btn-primary">
-                See my work <span aria-hidden="true">→</span>
-              </a>
-            </Magnetic>
-            <HireButton />
+            <div className={styles.enter} data-hero-cta>
+              <Magnetic>
+                <a href="#work" className="btn btn-primary">
+                  See my work <span aria-hidden="true">→</span>
+                </a>
+              </Magnetic>
+            </div>
+            <div className={styles.enter} data-hero-cta>
+              <HireButton />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-10 overflow-hidden border-y-2 border-ink bg-ink py-3 text-paper">
+      <div className={`${styles.enter} mt-10 overflow-hidden border-y-2 border-ink bg-ink py-3 text-paper`} data-hero-strip>
         <p className="sr-only">{roles.join(", ")}</p>
         <div className={styles.marquee} aria-hidden="true">
           {[0, 1].map((copy) => (
@@ -86,6 +93,7 @@ export default function Hero() {
           ))}
         </div>
       </div>
+      <HeroEntrance />
     </section>
   );
 }

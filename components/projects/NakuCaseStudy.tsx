@@ -33,7 +33,7 @@ export default function NakuCaseStudy() {
           <figure className={styles.admin} data-reveal="mask">
             <Image src={admin.src} alt={admin.alt} width={admin.width} height={admin.height} sizes="(min-width: 1024px) 45vw, 90vw" />
           </figure>
-          <figure className={styles.phone} data-reveal="mask">
+          <figure className={styles.phone} data-phone-slide data-enter>
             <Image src={mobile.src} alt={mobile.alt} width={mobile.width} height={mobile.height} sizes="(min-width: 1024px) 14vw, 36vw" />
           </figure>
         </div>
@@ -62,21 +62,21 @@ export default function NakuCaseStudy() {
 
         <div className="lg:col-span-7">
           <p className="annot mb-3 text-muted">Architecture</p>
-          <div className="font-mono text-sm">
+          <div className="font-mono text-sm" data-arch>
             <ul className="grid gap-2 sm:grid-cols-3">
               {architecture.clients.map((part) => (
-                <li key={part.layer} className="border-2 border-ink bg-paper-deep px-3 py-2">
+                <li key={part.layer} className="border-2 border-ink bg-paper-deep px-3 py-2" data-arch-client data-enter>
                   <span className="block text-xs text-muted uppercase">{part.layer}</span>
                   {part.tech}
                 </li>
               ))}
             </ul>
             <p className="text-center text-lg leading-8 sm:grid sm:grid-cols-3" aria-hidden="true">
-              <span>↓</span>
-              <span className="hidden sm:inline">↓</span>
-              <span className="hidden sm:inline">↓</span>
+              <span className="inline-block" data-arch-arrow data-enter>↓</span>
+              <span className="hidden sm:inline-block" data-arch-arrow data-enter>↓</span>
+              <span className="hidden sm:inline-block" data-arch-arrow data-enter>↓</span>
             </p>
-            <p className="border-2 border-ink bg-ink px-3 py-2 text-paper">
+            <p className="border-2 border-ink bg-ink px-3 py-2 text-paper" data-arch-backend data-enter>
               <span className="block text-xs text-paper/60 uppercase">{architecture.backend.layer}</span>
               {architecture.backend.tech}
             </p>

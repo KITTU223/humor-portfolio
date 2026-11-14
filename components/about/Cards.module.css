@@ -91,20 +91,25 @@
   border: 2px solid var(--color-ink);
 }
 
-/* 01 Code: the commit message types itself. */
+/* 01 Code: the commit message types itself (CodeVisual.tsx), typo and all.
+   Without JS or with reduced motion, hover simply shows it. */
 .typed {
-  width: 0;
+  width: fit-content;
+  min-height: 1.5em;
   margin-top: 0.75rem;
-  overflow: hidden;
   white-space: nowrap;
   color: var(--color-lime);
   border-right: 2px solid var(--color-lime);
 }
 
-.card:hover .typed,
-.card:focus-visible .typed {
-  width: 29ch;
-  transition: width 1.2s steps(29);
+.typed > span {
+  display: none;
+}
+
+.card:hover .typed > span,
+.card:focus-visible .typed > span,
+.typed[data-playing] > span {
+  display: inline;
 }
 
 /* 02 F1: draw the racing line, pin the gauge. */
@@ -131,6 +136,22 @@
 .card:focus-visible .racingLine {
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.9s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+/* The car that leads the racing line, and its speed trace (F1Visual.tsx). */
+.car {
+  fill: var(--color-ink);
+  opacity: 0;
+}
+
+.telemetry {
+  position: absolute;
+  left: 1rem;
+  bottom: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
 }
 
 .gauge {
@@ -242,6 +263,38 @@
     opacity 0.1s;
 }
 
+/* Idea → shipped progress (BusinessVisual.tsx). */
+.pipeline {
+  position: absolute;
+  left: 1rem;
+  bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pipelineTrack {
+  width: 3.5rem;
+  height: 0.45rem;
+  border: 1.5px solid var(--color-ink);
+}
+
+.pipelineFill {
+  display: block;
+  height: 100%;
+  background: var(--color-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* With JS, the stamp waits for the pipeline to reach "shipped" before it lands. */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html.js) .card:hover .stamp,
+  :global(html.js) .card:focus-visible .stamp {
+    transition-delay: 0.8s;
+  }
+}
+
 /* 06 AI: the robot. */
 .robot {
   --look-x: 0px;
@@ -270,6 +323,16 @@
 
 .card:hover .mouth {
   d: path("M48 60q12 8 24 0");
+}
+
+.aiStatus {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {

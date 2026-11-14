@@ -36,6 +36,21 @@
   padding-block: 4rem;
 }
 
+/* Hidden until Intro.tsx has split the heading into words, so it never flashes unsplit. */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html.js) .heading {
+    opacity: 0;
+  }
+
+  :global(html.js) .punch {
+    opacity: 0;
+  }
+}
+
+.heading {
+  transform-origin: 0% 100%;
+}
+
 .skip {
   position: absolute;
   right: 1rem;

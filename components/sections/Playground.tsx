@@ -4,6 +4,7 @@ import UselessAI from "@/components/playground/UselessAI";
 import EscapingButton from "@/components/playground/EscapingButton";
 import Arcade from "@/components/playground/Arcade";
 import LurkingBug from "@/components/playground/LurkingBug";
+import MarkerSweep from "@/components/ui/MarkerSweep";
 
 type ExperimentProps = { number: string; title: string; note: string; className?: string; children: React.ReactNode };
 
@@ -38,7 +39,10 @@ export default function Playground() {
             </span>
             <span className="line">
               <span>
-                the <span className="bg-[linear-gradient(transparent_45%,var(--color-signal)_45%,var(--color-signal)_88%,transparent_88%)] px-2">nonsense.</span>
+                the{" "}
+                <span className="marker bg-[linear-gradient(transparent_45%,var(--color-signal)_45%,var(--color-signal)_88%,transparent_88%)] px-2" data-marker>
+                  nonsense.
+                </span>
               </span>
             </span>
           </h2>
@@ -65,6 +69,7 @@ export default function Playground() {
           </Experiment>
         </div>
       </div>
+      <MarkerSweep root="#nonsense" />
     </section>
   );
 }

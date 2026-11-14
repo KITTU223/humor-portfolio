@@ -15,8 +15,12 @@
   text-shadow: 0.035em 0.035em 0 var(--color-signal);
 }
 
+/* --drop and --swing are animated by FooterMotion.tsx; transform stays free for the hover. */
 .letter {
   display: inline-block;
+  translate: 0 var(--drop, 0em);
+  rotate: var(--swing, 0deg);
+  transform-origin: 50% 0%;
   transition:
     transform 0.4s var(--ease-spring),
     color 0.2s;

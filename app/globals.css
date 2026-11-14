@@ -128,6 +128,13 @@ html[data-mode="dramatic"] [data-boast]::after {
   .line > span {
     display: block;
   }
+
+  /* Highlighter stroke behind a word. Anime.js sweeps it in left to right (see data-marker). */
+  .marker {
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    box-decoration-break: clone;
+  }
 }
 
 /* Reveal targets start hidden only when JS can reveal them, and never for reduced motion.
@@ -144,5 +151,18 @@ html[data-mode="dramatic"] [data-boast]::after {
 
   html.js [data-reveal="lines"]:not([data-revealed]) .line > span {
     transform: translateY(125%);
+  }
+
+  html.js [data-reveal="mask"] img {
+    scale: var(--zoom, 1);
+  }
+
+  /* The Anime.js equivalent: lib/anime.ts markEntered() sets data-entered as the animation starts. */
+  html.js [data-enter]:not([data-entered]) {
+    opacity: 0;
+  }
+
+  html.js [data-marker]:not([data-entered]) {
+    background-size: 0% 100%;
   }
 }

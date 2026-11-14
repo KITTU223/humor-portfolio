@@ -16,21 +16,26 @@ export function scrollToHash(hash: string) {
   else target.scrollIntoView({ behavior: "smooth" });
 }
 
-// The intro state lives on <html data-intro>, set before paint by the inline script in layout.tsx.
-export function onIntroDone(callback: () => void) {
+// Page-level motion state lives on <html> data attributes, set before paint by the inline script
+// in layout.tsx: data-intro ("running" → "done") and data-hero ("pending" → "done").
+function waitFor(key: "intro" | "hero", busy: string, callback: () => void) {
   const html = document.documentElement;
-  if (html.dataset.intro !== "running") {
+  if (html.dataset[key] !== busy) {
     callback();
     return () => {};
   }
   const observer = new MutationObserver(() => {
-    if (html.dataset.intro === "done") {
-      observer.disconnect();
-      callback();
-    }
+    if (html.dataset[key] === busy) return;
+    observer.disconnect();
+    callback();
   });
-  observer.observe(html, { attributes: true, attributeFilter: ["data-intro"] });
+  observer.observe(html, { attributes: true, attributeFilter: [`data-${key}`] });
   return () => observer.disconnect();
 }
+
+export const onIntroDone = (callback: () => void) => waitFor("intro", "running", callback);
+
+// The hero entrance owns the portrait's transforms until it finishes; GSAP parallax waits for this.
+export const onHeroDone = (callback: () => void) => waitFor("hero", "pending", callback);
 
 export { gsap, ScrollTrigger };
